@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/input-otp";
 import { useAuth } from "@/contexts/AuthContext";
 import { parseErrors } from "@/utils/errors-util";
-import { Loader2, QrCode, ShieldCheck, VerifiedIcon } from "lucide-react";
+import { Loader2, QrCode, ShieldCheck } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 

@@ -64,7 +64,7 @@ export const createApi = (getAccessToken, setAccessToken, navigateToLogin) => {
 
         try {
           const refreshResponse = await api.post(
-            "accounts/auth/refresh-token/"
+            "auth/refresh-token/"
           );
           const newAccessToken = refreshResponse.data.access_token;
 

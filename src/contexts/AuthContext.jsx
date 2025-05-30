@@ -18,16 +18,22 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userForm) => {
     try {
-      const response = await baseApi.post("accounts/auth/register/", userForm);
-      console.log(response.data)
+      const response = await baseApi.post(
+        "accounts/account/register/",
+        userForm
+      );
+      return response.data;
     } catch (err) {
-      console.error(err);
+      throw err.response?.data || "Erro ao registrar usuário";
     }
   };
 
   const login = async (credentials) => {
     try {
-      const response = await baseApi.post("accounts/auth/login/", credentials);
+      const response = await baseApi.post(
+        "accounts/account/login/",
+        credentials
+      );
       const temporaryToken = response.data.access_token;
       setAccessToken(temporaryToken);
 
@@ -37,12 +43,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const authenticate = async (otpCode) => {
+  const forgotPassword = async (email) => {
+    try {
+      const response = await baseApi.post("accounts/password/forgot/", email);
+      return response.data;
+    } catch (err) {
+      console.error(err);
+      throw err.response?.data || "Erro ao recuperar senha";
+    }
+  };
+
+  const forgotPasswordConfirm = async (credentials, auth) => {
     try {
       const response = await baseApi.post(
-        "accounts/auth/2F-authentication/",
-        otpCode
+        `accounts/password/forgot-confirm/?auth=${auth}`,
+        credentials
       );
+      return response.data;
+    } catch (err) {
+      throw err.response?.data || "Erro ao confirmar a recuperação de senha"
+    }
+  };
+
+  const authenticate = async (otpCode) => {
+    try {
+      const response = await baseApi.post("auth/2FA/", otpCode);
       setAccessToken(response.data.access_token);
     } catch (err) {
       throw err.response?.data || "Erro de autenticação";
@@ -51,7 +76,7 @@ export const AuthProvider = ({ children }) => {
 
   const getMe = async () => {
     try {
-      const response = await baseApi.get("accounts/auth/me/");
+      const response = await baseApi.get("accounts/account/me/");
 
       return response.data;
     } catch (err) {
@@ -67,6 +92,8 @@ export const AuthProvider = ({ children }) => {
         baseApi,
         register,
         login,
+        forgotPassword,
+        forgotPasswordConfirm,
         authenticate,
         getMe,
         user,
